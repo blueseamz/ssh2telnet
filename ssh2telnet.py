@@ -24,6 +24,9 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
     def setup(self):
         print("{} connected".format(self.client_address))
         clientlist.append(self.request)
+        self.request.sendall(b"\xff\xfe\x01")   # turn off localecho
+        self.request.recv(1024)
+        # you can add other mode here
 
     def handle(self):
         while True:
@@ -34,6 +37,7 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
             sshshell.send(self.data)
 
     def finish(self):
+        print("{} disconnected".format(self.client_address))
         clientlist.remove(self.request)
 
 
